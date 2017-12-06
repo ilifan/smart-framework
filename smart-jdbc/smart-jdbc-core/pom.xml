@@ -13,13 +13,18 @@
     <packaging>jar</packaging>
 
     <properties>
-        <shardingjdbc.version>2.0.0.M3</shardingjdbc.version>
+        <shardingjdbc.version>2.0.0</shardingjdbc.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>io.shardingjdbc</groupId>
             <artifactId>sharding-jdbc-core</artifactId>
+            <version>${shardingjdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.shardingjdbc</groupId>
+            <artifactId>sharding-jdbc-core-spring-namespace</artifactId>
             <version>${shardingjdbc.version}</version>
         </dependency>
         <dependency>

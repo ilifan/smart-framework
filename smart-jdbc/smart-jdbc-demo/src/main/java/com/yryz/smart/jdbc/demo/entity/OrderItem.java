@@ -18,39 +18,49 @@
 package com.yryz.smart.jdbc.demo.entity;
 
 public final class OrderItem {
+
+    private Long id;
     
-    private long orderItemId;
+    private Long orderItemId;
     
-    private long orderId;
+    private Long orderId;
     
-    private int userId;
+    private Long userId;
     
     private String status;
-    
-    public long getOrderItemId() {
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getOrderItemId() {
         return orderItemId;
     }
-    
-    public void setOrderItemId(final long orderItemId) {
+
+    public void setOrderItemId(Long orderItemId) {
         this.orderItemId = orderItemId;
     }
-    
-    public long getOrderId() {
+
+    public Long getOrderId() {
         return orderId;
     }
-    
-    public void setOrderId(final long orderId) {
+
+    public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
-    
-    public int getUserId() {
+
+    public Long getUserId() {
         return userId;
     }
-    
-    public void setUserId(final int userId) {
+
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
-    
+
     public String getStatus() {
         return status;
     }

@@ -19,15 +19,20 @@ package com.yryz.smart.jdbc.core.algorithm;
 
 import io.shardingjdbc.core.api.algorithm.sharding.PreciseShardingValue;
 import io.shardingjdbc.core.api.algorithm.sharding.standard.PreciseShardingAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-public final class PreciseModuloDatabaseShardingAlgorithm implements PreciseShardingAlgorithm<Integer> {
-    
+public final class PreciseModuloDatabaseShardingAlgorithm implements PreciseShardingAlgorithm<Long> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PreciseModuloDatabaseShardingAlgorithm.class);
+
     @Override
-    public String doSharding(final Collection<String> availableTargetNames, final PreciseShardingValue<Integer> shardingValue) {
+    public String doSharding(final Collection<String> availableTargetNames, final PreciseShardingValue<Long> shardingValue) {
         for (String each : availableTargetNames) {
             if (each.endsWith(shardingValue.getValue() % 2 + "")) {
+                LOG.info("KEY【{}】映射数据库【{}】", shardingValue.getValue(), each);
                 return each;
             }
         }
