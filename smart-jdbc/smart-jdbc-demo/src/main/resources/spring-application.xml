@@ -11,16 +11,6 @@
         http://shardingjdbc.io/schema/shardingjdbc/masterslave http://shardingjdbc.io/schema/shardingjdbc/masterslave/master-slave.xsd
         http://shardingjdbc.io/schema/shardingjdbc/orchestration/reg http://shardingjdbc.io/schema/shardingjdbc/orchestration/reg/reg.xsd">
 
-    <!-- 引入配置文件 -->
-    <bean id="defaultSmartConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="ignoreUnresolvablePlaceholders" value="true"/>
-        <property name="locations">
-            <list>
-                <value>classpath*:smart-jdbc.properties</value>
-            </list>
-        </property>
-    </bean>
-
     <!-- 注册中心配置 -->
     <reg:zookeeper id="jdbcCenter" namespace="${jdbc.zk.namespace}" server-lists="${jdbc.zk.server.list}"
                    base-sleep-time-milliseconds="${jdbc.zk.base.sleep.time}"
@@ -124,6 +114,7 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="shardingDataSource"/>
         <property name="mapperLocations" value="classpath*:com/yryz/smart/jdbc/**/mapper/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
         <property name="plugins">
             <array>
                 <bean class="com.github.pagehelper.PageHelper">
@@ -138,7 +129,7 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.yryz.smart.jdbc.demo.dao"/>
+        <property name="basePackage" value="com.yryz.smart.jdbc.**.dao.persistence"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
     </bean>

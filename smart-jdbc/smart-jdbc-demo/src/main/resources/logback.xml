@@ -13,8 +13,6 @@
         </encoder>
     </appender>
 
-    <logger name="dao" level="INFO"/>
-
     <root>
         <level value="INFO"/>
         <appender-ref ref="STDOUT"/>

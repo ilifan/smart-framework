@@ -2,17 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yryz.smart.jdbc.demo.dao.persistence.OrderItemDao">
 
-    <resultMap id="baseResultMap" type="com.yryz.smart.jdbc.demo.entity.OrderItem">
-        <result column="order_item_id" property="orderItemId" jdbcType="INTEGER"/>
-        <result column="order_id" property="orderId" jdbcType="INTEGER"/>
-        <result column="user_id" property="userId" jdbcType="INTEGER"/>
-        <result column="status" property="status" jdbcType="VARCHAR"/>
-    </resultMap>
-
     <update id="createIfNotExistsTable">
-        CREATE TABLE IF NOT EXISTS t_order_item (id BIGINT unsigned AUTO_INCREMENT,
-        order_item_id BIGINT unsigned, order_id BIGINT unsigned,
-        user_id BIGINT unsigned NOT NULL, status VARCHAR(50), PRIMARY KEY (id));
+        CREATE TABLE IF NOT EXISTS t_order_item (id BIGINT unsigned AUTO_INCREMENT, kid BIGINT unsigned,
+        order_kid BIGINT unsigned, create_user_id varchar(20) NOT NULL, PRIMARY KEY (id));
     </update>
 
     <update id="truncateTable">
@@ -23,28 +15,27 @@
         DROP TABLE IF EXISTS t_order_item;
     </update>
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="orderItemId">
+    <insert id="insert">
         INSERT INTO t_order_item (
-          order_item_id, order_id, user_id, status
+          kid, order_kid, create_user_id
         )
         VALUES (
-        #{orderItemId,jdbcType=BIGINT},
-        #{orderId,jdbcType=BIGINT},
-        #{userId,jdbcType=BIGINT},
-        #{status,jdbcType=VARCHAR}
+        #{kid,jdbcType=BIGINT},
+        #{orderKid,jdbcType=BIGINT},
+        #{createUserId,jdbcType=VARCHAR}
         )
     </insert>
 
     <delete id="delete">
-        DELETE FROM t_order_item WHERE order_id = #{orderId,jdbcType=BIGINT}
+        DELETE FROM t_order_item WHERE order_kid = #{orderKid,jdbcType=BIGINT}
     </delete>
 
-    <select id="selectAll" resultMap="baseResultMap">
+    <select id="selectAll" resultType="com.yryz.smart.jdbc.demo.entity.OrderItem">
         SELECT
         i.*
         FROM
         t_order o, t_order_item i
         WHERE
-        o.order_id = i.order_id
+        o.kid = i.order_kid
     </select>
 </mapper>

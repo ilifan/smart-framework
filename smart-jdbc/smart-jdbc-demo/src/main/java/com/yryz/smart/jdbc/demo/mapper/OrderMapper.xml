@@ -3,9 +3,8 @@
 <mapper namespace="com.yryz.smart.jdbc.demo.dao.persistence.OrderDao">
 
     <update id="createIfNotExistsTable">
-        CREATE TABLE IF NOT EXISTS t_order (id BIGINT unsigned AUTO_INCREMENT, order_id BIGINT unsigned,
-        user_id BIGINT unsigned NOT NULL,
-        status VARCHAR(50), PRIMARY KEY (id));
+        CREATE TABLE IF NOT EXISTS t_order (id BIGINT unsigned AUTO_INCREMENT, kid BIGINT unsigned,
+        create_user_id varchar(20) NOT NULL, PRIMARY KEY (id));
     </update>
 
     <update id="truncateTable">
@@ -18,16 +17,15 @@
 
     <insert id="insert">
         INSERT INTO t_order (
-          order_id, user_id, status
+          kid, create_user_id
         )
         VALUES (
-        #{orderId,jdbcType=BIGINT},
-        #{userId,jdbcType=BIGINT},
-        #{status,jdbcType=VARCHAR}
+        #{kid,jdbcType=BIGINT},
+        #{createUserId,jdbcType=VARCHAR}
         )
     </insert>
 
     <delete id="delete">
-        DELETE FROM t_order WHERE order_id = #{orderId,jdbcType=BIGINT}
+        DELETE FROM t_order WHERE kid = #{kid,jdbcType=BIGINT}
     </delete>
 </mapper>

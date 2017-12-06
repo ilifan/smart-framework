@@ -17,15 +17,17 @@
 
 package com.yryz.smart.jdbc.demo.entity;
 
-public final class Order {
+import java.io.Serializable;
+
+public final class Order implements Serializable {
+
+    private static final long serialVersionUID = -5830151458069919670L;
 
     private Long id;
-    
-    private Long orderId;
-    
-    private Long userId;
-    
-    private String status;
+
+    private Long kid;
+
+    private String createUserId;
 
     public Long getId() {
         return id;
@@ -35,32 +37,19 @@ public final class Order {
         this.id = id;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getKid() {
+        return kid;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setKid(Long kid) {
+        this.kid = kid;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-    
-    public void setStatus(final String status) {
-        this.status = status;
-    }
-    
-    @Override
-    public String toString() {
-        return String.format("order_id: %s, user_id: %s, status: %s", orderId, userId, status);
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId;
     }
 }

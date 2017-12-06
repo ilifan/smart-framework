@@ -24,14 +24,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-public final class PreciseModuloDatabaseShardingAlgorithm implements PreciseShardingAlgorithm<Long> {
+public final class PreciseModuloDatabaseShardingAlgorithm implements PreciseShardingAlgorithm<String> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PreciseModuloDatabaseShardingAlgorithm.class);
 
     @Override
-    public String doSharding(final Collection<String> availableTargetNames, final PreciseShardingValue<Long> shardingValue) {
+    public String doSharding(final Collection<String> availableTargetNames, final PreciseShardingValue<String> shardingValue) {
         for (String each : availableTargetNames) {
-            if (each.endsWith(shardingValue.getValue() % 2 + "")) {
+            if (each.endsWith(Long.parseLong(shardingValue.getValue()) % 2 + "")) {
                 LOG.info("KEY【{}】映射数据库【{}】", shardingValue.getValue(), each);
                 return each;
             }

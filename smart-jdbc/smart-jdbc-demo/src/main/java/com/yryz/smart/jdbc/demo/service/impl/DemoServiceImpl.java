@@ -1,6 +1,7 @@
 package com.yryz.smart.jdbc.demo.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.PageHelper;
 import com.yryz.smart.jdbc.demo.dao.persistence.OrderDao;
 import com.yryz.smart.jdbc.demo.dao.persistence.OrderItemDao;
 import com.yryz.smart.jdbc.demo.entity.Order;
@@ -14,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Transactional
 @Service
@@ -52,30 +52,23 @@ public class DemoServiceImpl implements DemoService {
         LOG.info("");
         LOG.info("3.Insert--------------Start");
         List<Long> orderIds = new ArrayList<>(10);
-        Random random = new Random(1000);
         for (int i = 0; i < 2; i++) {
             long orderId = 1 * i;
             long orderItemId = 2 * i;
-            long userId = 3 * i;
+            long createUserId = 3 * i;
 
             Order order = new Order();
-            order.setOrderId(orderId);
-            order.setUserId(userId);
-            order.setStatus("INSERT_ORDER_TEST");
+            order.setKid(orderId);
+            order.setCreateUserId(String.valueOf(createUserId));
             orderDao.insert(order);
 
             OrderItem item = new OrderItem();
-            item.setOrderItemId(orderItemId);
-            item.setOrderId(orderId);
-            item.setUserId(userId);
-            item.setStatus("INSERT_ORDER_ITEM_TEST");
+            item.setKid(orderItemId);
+            item.setOrderKid(orderId);
+            item.setCreateUserId(String.valueOf(createUserId));
             orderItemDao.insert(item);
 
             orderIds.add(orderId);
-
-//            if(i == 1){
-//                throw new RuntimeException("主动打断");
-//            }
         }
         LOG.info("3.Insert--------------End");
         LOG.info("");
@@ -84,22 +77,28 @@ public class DemoServiceImpl implements DemoService {
         LOG.info("################################################################################");
         LOG.info("");
         LOG.info("4.Select--------------Start");
-        LOG.info(JSON.toJSONString(orderItemDao.selectAll()));
+        PageHelper.startPage(2, 10);
+        List<OrderItem> resultList = orderItemDao.selectAll();
+        LOG.info(resultList.toString());
+        LOG.info(JSON.toJSONString(resultList));
         LOG.info("4.Select--------------End");
         LOG.info("");
         LOG.info("################################################################################");
 
-        LOG.info("################################################################################");
-        LOG.info("");
-        LOG.info("5.Delete--------------Start");
-        for (Long each : orderIds) {
-            orderDao.delete(each);
-            orderItemDao.delete(each);
-        }
-        LOG.info(JSON.toJSONString(orderItemDao.selectAll()));
-        LOG.info("5.Delete--------------End");
-        LOG.info("");
-        LOG.info("################################################################################");
+//        LOG.info("################################################################################");
+//        LOG.info("");
+//        LOG.info("5.Delete--------------Start");
+//        for (Long each : orderIds) {
+//            orderDao.delete(each);
+//            orderItemDao.delete(each);
+//        }
+//        PageHelper.startPage(1, 10);
+//        resultList = orderItemDao.selectAll();
+//        LOG.info(resultList.toString());
+//        LOG.info(JSON.toJSONString(resultList));
+//        LOG.info("5.Delete--------------End");
+//        LOG.info("");
+//        LOG.info("################################################################################");
 
 //        LOG.info("################################################################################");
 //        LOG.info("");

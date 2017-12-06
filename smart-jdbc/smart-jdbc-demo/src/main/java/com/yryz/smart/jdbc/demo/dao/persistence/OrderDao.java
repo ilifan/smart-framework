@@ -28,7 +28,7 @@ public interface OrderDao {
 
     void truncateTable();
 
-    Long insert(Order model);
+    int insert(Order model);
 
     void delete(Long orderId);
 

@@ -1,7 +1,6 @@
 # Compiled class file
 .idea
-.iml
-*/*.iml
+**/*.iml
 
 *.class
 

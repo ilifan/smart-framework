@@ -30,6 +30,7 @@
         <mongo.java.version>3.2.0</mongo.java.version>
         <c3p0.version>0.9.1.2</c3p0.version>
         <mysql.driver.version>5.1.30</mysql.driver.version>
+        <pagehelper.version>4.0.3</pagehelper.version>
 
         <dubbo.version>2.5.3</dubbo.version>
         <zkclient.version>0.1</zkclient.version>
@@ -241,7 +242,12 @@
                 <version>${mysql.driver.version}</version>
                 <scope>runtime</scope>
             </dependency>
-
+            <!-- pageHelper分页 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
             <!-- components -->
             <dependency>
                 <groupId>com.alibaba</groupId>

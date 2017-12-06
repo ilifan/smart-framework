@@ -17,17 +17,19 @@
 
 package com.yryz.smart.jdbc.demo.entity;
 
-public final class OrderItem {
+import java.io.Serializable;
+
+public final class OrderItem implements Serializable {
+
+    private static final long serialVersionUID = -5971379729596870689L;
 
     private Long id;
-    
-    private Long orderItemId;
-    
-    private Long orderId;
-    
-    private Long userId;
-    
-    private String status;
+
+    private Long kid;
+
+    private Long orderKid;
+
+    private String createUserId;
 
     public Long getId() {
         return id;
@@ -37,40 +39,27 @@ public final class OrderItem {
         this.id = id;
     }
 
-    public Long getOrderItemId() {
-        return orderItemId;
+    public Long getKid() {
+        return kid;
     }
 
-    public void setOrderItemId(Long orderItemId) {
-        this.orderItemId = orderItemId;
+    public void setKid(Long kid) {
+        this.kid = kid;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getOrderKid() {
+        return orderKid;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderKid(Long orderKid) {
+        this.orderKid = orderKid;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-    
-    public void setStatus(final String status) {
-        this.status = status;
-    }
-    
-    @Override
-    public String toString() {
-        return String.format("order_item_id:%s, order_id: %s, user_id: %s, status: %s", orderItemId, orderId, userId, status);
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId;
     }
 }

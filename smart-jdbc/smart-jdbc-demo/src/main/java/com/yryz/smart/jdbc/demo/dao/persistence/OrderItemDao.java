@@ -18,7 +18,7 @@
 package com.yryz.smart.jdbc.demo.dao.persistence;
 
 
-import com.yryz.smart.jdbc.demo.entity.Order;
+import com.github.pagehelper.Page;
 import com.yryz.smart.jdbc.demo.entity.OrderItem;
 import org.springframework.stereotype.Repository;
 
@@ -31,11 +31,11 @@ public interface OrderItemDao {
 
     void truncateTable();
 
-    Long insert(OrderItem model);
+    int insert(OrderItem model);
 
     void delete(Long orderItemId);
 
     void dropTable();
 
-    List<Order> selectAll();
+    List<OrderItem> selectAll();
 }
