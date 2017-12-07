@@ -17,25 +17,24 @@
 
 package com.yryz.smart.jdbc.core.algorithm;
 
+import com.yryz.smart.jdbc.core.ConsistentHashingMapping;
 import io.shardingjdbc.core.api.algorithm.sharding.PreciseShardingValue;
 import io.shardingjdbc.core.api.algorithm.sharding.standard.PreciseShardingAlgorithm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
-public final class PreciseModuloDatabaseShardingAlgorithm implements PreciseShardingAlgorithm<String> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PreciseModuloDatabaseShardingAlgorithm.class);
+/**
+ * Copyright (c) 2017-2018 Wuhan Yryz Network Company LTD.
+ * All rights reserved.
+ * <p>
+ * Created on 2017/12/6 17:50
+ * Created by lifan
+ * 数据表一致性hash分片算法
+ */
+public final class TableHashingShardingAlgorithm implements PreciseShardingAlgorithm<String> {
 
     @Override
     public String doSharding(final Collection<String> availableTargetNames, final PreciseShardingValue<String> shardingValue) {
-        for (String each : availableTargetNames) {
-            if (each.endsWith(Long.parseLong(shardingValue.getValue()) % 2 + "")) {
-                LOG.info("KEY【{}】映射数据库【{}】", shardingValue.getValue(), each);
-                return each;
-            }
-        }
-        throw new UnsupportedOperationException();
+        return ConsistentHashingMapping.getTargetTableName(availableTargetNames, String.valueOf(shardingValue.getValue()));
     }
 }

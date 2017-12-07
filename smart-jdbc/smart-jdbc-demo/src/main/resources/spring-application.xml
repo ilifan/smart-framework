@@ -84,9 +84,9 @@
 
     <!-- 分片策略配置 -->
     <sharding:standard-strategy id="databaseStrategy" sharding-column="create_user_id"
-                                precise-algorithm-class="com.yryz.smart.jdbc.core.algorithm.PreciseModuloDatabaseShardingAlgorithm"/>
+                                precise-algorithm-class="com.yryz.smart.jdbc.core.algorithm.DatabaseHashingShardingAlgorithm"/>
     <sharding:standard-strategy id="tableStrategy" sharding-column="kid"
-                                precise-algorithm-class="com.yryz.smart.jdbc.core.algorithm.PreciseModuloTableShardingAlgorithm"/>
+                                precise-algorithm-class="com.yryz.smart.jdbc.core.algorithm.TableHashingShardingAlgorithm"/>
 
     <!-- 分片数据源配置 -->
     <sharding:data-source id="shardingDataSource">
@@ -100,9 +100,19 @@
             </sharding:table-rules>
         </sharding:sharding-rule>
         <sharding:props>
-            <prop key="sql.show">true</prop>
+            <prop key="sql.show">false</prop>
         </sharding:props>
     </sharding:data-source>
+
+    <!-- 数据源，数据表的一致性hash映射关系配置 -->
+    <bean class="com.yryz.smart.jdbc.core.ConsistentHashingMapping">
+        <property name="databaseHashingMapping">
+            <map>
+                <entry key="demo_ds_0" value="0" value-type="java.lang.Integer"/>
+                <entry key="demo_ds_1" value="512" value-type="java.lang.Integer"/>
+            </map>
+        </property>
+    </bean>
 
     <!-- 事务配置 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
