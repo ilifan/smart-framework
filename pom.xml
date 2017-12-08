@@ -633,6 +633,7 @@
 
     <modules>
         <module>smart-jdbc</module>
+        <module>smart-log</module>
     </modules>
 
 </project>

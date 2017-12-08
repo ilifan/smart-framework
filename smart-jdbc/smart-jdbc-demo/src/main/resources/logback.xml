@@ -13,8 +13,14 @@
         </encoder>
     </appender>
 
+    <appender name="KAFKA" class="com.yryz.smart.log.kafka.KafkaAppender">
+        <topic>test</topic>
+        <bootstrapServers>192.168.30.89:9092</bootstrapServers>
+    </appender>
+
     <root>
         <level value="DEBUG"/>
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="KAFKA"/>
     </root>
 </configuration>
