@@ -20,8 +20,27 @@
                 <pattern>${log.pattern}</pattern>
             </layout>
         </encoder>
+        <!-- 默认key为null，需要配置key生成策略可以实现KeyStrategy接口 -->
+        <keyStrategy class="com.yryz.smart.log.kafka.key.DefaultKeyStrategy"/>
+
+        <!-- kafka producer topic config -->
         <topic>test</topic>
-        <bootstrapServers>192.168.30.89:9092</bootstrapServers>
+
+        <!-- kafka producer config -->
+        <!-- bootstrap.servers is the only mandatory producerConfig -->
+        <producerConfig>bootstrap.servers=192.168.30.89:9092</producerConfig>
+        <!-- don't wait for a broker to ack the reception of a batch. -->
+        <producerConfig>acks=0</producerConfig>
+        <!-- this configuration controls the default batch size in bytes. -->
+        <producerConfig>batch.size=16384</producerConfig>
+        <!-- the total bytes of memory the producer can use to buffer records waiting to be sent to the server. -->
+        <producerConfig>buffer.memory=33554432</producerConfig>
+        <!-- wait up to 1000ms and collect log messages before sending them as a batch -->
+        <producerConfig>linger.ms=1000</producerConfig>
+        <!-- the times to resend message when send failure -->
+        <producerConfig>retries=0</producerConfig>
+        <!-- define a client-id that you use to identify yourself against the kafka broker -->
+        <producerConfig>client.id=${HOSTNAME}-${CONTEXT_NAME}-logback-kafka</producerConfig>
     </appender>
 
     <root>

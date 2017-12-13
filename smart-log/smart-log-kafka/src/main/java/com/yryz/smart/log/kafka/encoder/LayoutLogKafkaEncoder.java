@@ -1,5 +1,6 @@
 package com.yryz.smart.log.kafka.encoder;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Layout;
 
 import java.nio.charset.Charset;
@@ -11,16 +12,16 @@ import java.nio.charset.Charset;
  * Created on 2017/12/12 18:11
  * Created by lifan
  */
-public class LayoutLogKafkaEncoder<E> extends LogKafkaEncoderBase<E> {
+public class LayoutLogKafkaEncoder extends LogKafkaEncoderBase<ILoggingEvent> {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
-    private Layout<E> layout;
+    private Layout<ILoggingEvent> layout;
     private Charset charset;
 
     public LayoutLogKafkaEncoder() {
     }
 
-    public LayoutLogKafkaEncoder(Layout<E> layout, Charset charset) {
+    public LayoutLogKafkaEncoder(Layout<ILoggingEvent> layout, Charset charset) {
         this.layout = layout;
         this.charset = charset;
     }
@@ -35,12 +36,12 @@ public class LayoutLogKafkaEncoder<E> extends LogKafkaEncoderBase<E> {
     }
 
     @Override
-    public byte[] doEncode(E event) {
+    public byte[] doEncode(ILoggingEvent event) {
         final String message = layout.doLayout(event);
         return message.getBytes(charset);
     }
 
-    public void setLayout(Layout<E> layout) {
+    public void setLayout(Layout<ILoggingEvent> layout) {
         this.layout = layout;
     }
 
@@ -48,7 +49,7 @@ public class LayoutLogKafkaEncoder<E> extends LogKafkaEncoderBase<E> {
         this.charset = charset;
     }
 
-    public Layout<E> getLayout() {
+    public Layout<ILoggingEvent> getLayout() {
         return layout;
     }
 
