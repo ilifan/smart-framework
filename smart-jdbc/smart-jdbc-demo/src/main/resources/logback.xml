@@ -14,6 +14,12 @@
     </appender>
 
     <appender name="KAFKA" class="com.yryz.smart.log.kafka.KafkaAppender">
+        <encoder class="com.yryz.smart.log.kafka.encoder.LayoutLogKafkaEncoder">
+            <charset>${log.charset}</charset>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${log.pattern}</pattern>
+            </layout>
+        </encoder>
         <topic>test</topic>
         <bootstrapServers>192.168.30.89:9092</bootstrapServers>
     </appender>

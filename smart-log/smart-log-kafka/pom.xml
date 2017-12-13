@@ -22,9 +22,9 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
-            <version>1.0.0</version>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>2.1.0.RELEASE</version>
         </dependency>
     </dependencies>
 

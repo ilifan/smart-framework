@@ -1,48 +1,70 @@
 package com.yryz.smart.log.kafka;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.AppenderBase;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * kafka日志Appender
  */
-public class KafkaAppender extends AppenderBase<ILoggingEvent> {
+public class KafkaAppender extends KafkaAppenderBase<ILoggingEvent> {
+    //创建线程池
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     //话题
     private String topic;
     //kafka服务器
     private String bootstrapServers;
-    //kafka生产者
-    private Producer<String, String> producer;
+    //kafka生产者模板
+    private KafkaTemplate<byte[], byte[]> kafkaTemplate;
+
+    /**
+     * 验证参数
+     *
+     * @return
+     */
+    private boolean checkRequiredParam() {
+        if (null == this.encoder)
+            return false;
+        if (null == bootstrapServers || "".equals(bootstrapServers.trim()))
+            return false;
+        return true;
+    }
 
     @Override
     public void start() {
-        Properties props = new Properties();
-        props.put("bootstrap.servers", bootstrapServers);
-        props.put("acks", "all");
-        props.put("retries", 0);
-        props.put("batch.size", 16384);
-        props.put("linger.ms", 1);
-        props.put("buffer.memory", 33554432);
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        this.producer = new KafkaProducer<>(props);
-        super.start();
+        if (checkRequiredParam()) {
+            Map<String, Object> props = new HashMap<>();
+            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers.trim());
+            props.put(ProducerConfig.RETRIES_CONFIG, 0);
+            props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
+            props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
+            props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer.class);
+            ProducerFactory<byte[], byte[]> producerFactory = new DefaultKafkaProducerFactory<>(props);
+            this.kafkaTemplate = new KafkaTemplate<>(producerFactory);
+            this.kafkaTemplate.setDefaultTopic(this.topic);
+            super.start();
+        }
     }
 
     @Override
     public void stop() {
         super.stop();
-        this.producer.close();
+        executorService.shutdown();
     }
 
     @Override
     protected void append(ILoggingEvent event) {
-        this.producer.send(new ProducerRecord<>(this.topic,"1", event.getFormattedMessage()));
+        executorService.execute(() -> this.kafkaTemplate.sendDefault(this.encoder.doEncode(event)));
     }
 
     public String getTopic() {
