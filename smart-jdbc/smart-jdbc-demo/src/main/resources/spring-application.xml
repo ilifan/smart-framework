@@ -84,12 +84,12 @@
 
     <!-- 分片策略配置 -->
     <sharding:standard-strategy id="databaseStrategy" sharding-column="create_user_id"
-                                precise-algorithm-class="com.yryz.smart.jdbc.core.algorithm.DatabaseHashingShardingAlgorithm"/>
+                                precise-algorithm-class="com.yryz.smart.jdbc.core.sharding.algorithm.DatabaseHashingShardingAlgorithm"/>
     <sharding:standard-strategy id="tableStrategy" sharding-column="kid"
-                                precise-algorithm-class="com.yryz.smart.jdbc.core.algorithm.TableHashingShardingAlgorithm"/>
+                                precise-algorithm-class="com.yryz.smart.jdbc.core.sharding.algorithm.TableHashingShardingAlgorithm"/>
 
     <!-- 分片数据源配置 -->
-    <sharding:data-source id="shardingDataSource">
+    <sharding:data-source id="shardingDataSource_SGT">
         <sharding:sharding-rule data-source-names="demo_ds_0,demo_ds_1" default-data-source-name="demo_ds_0"
                                 default-database-strategy-ref="databaseStrategy"
                                 default-table-strategy-ref="tableStrategy">
@@ -104,25 +104,70 @@
         </sharding:props>
     </sharding:data-source>
 
+
+    <bean id="demo_qs_0" parent="abstractDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/demo_qs_0?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"/>
+    </bean>
+
+    <!-- 分片数据源配置 -->
+    <sharding:data-source id="shardingDataSource_QUANHU">
+        <sharding:sharding-rule data-source-names="demo_qs_0">
+            <sharding:table-rules>
+                <sharding:table-rule logic-table=""/>
+            </sharding:table-rules>
+        </sharding:sharding-rule>
+        <sharding:props>
+            <prop key="sql.show">false</prop>
+        </sharding:props>
+    </sharding:data-source>
+
+    <bean id="demo_zs_0" parent="abstractDataSource">
+        <property name="url" value="jdbc:mysql://localhost:3306/demo_zs_0?useUnicode=true&amp;characterEncoding=UTF-8&amp;useFastDateParsing=false&amp;allowMultiQueries=true&amp;serverTimezone=GMT%2b8"/>
+    </bean>
+
+    <!-- 分片数据源配置 -->
+    <sharding:data-source id="shardingDataSource_ZGZY">
+        <sharding:sharding-rule data-source-names="demo_zs_0">
+            <sharding:table-rules>
+                <sharding:table-rule logic-table=""/>
+            </sharding:table-rules>
+        </sharding:sharding-rule>
+        <sharding:props>
+            <prop key="sql.show">false</prop>
+        </sharding:props>
+    </sharding:data-source>
+
     <!-- 数据源，数据表的一致性hash映射关系配置 -->
-    <bean class="com.yryz.smart.jdbc.core.ConsistentHashingMapping">
+    <bean class="com.yryz.smart.jdbc.core.sharding.ConsistentHashingMapping">
         <property name="databaseHashingMapping">
-            <map>
+            <map key-type="java.lang.String">
                 <entry key="demo_ds_0" value="0" value-type="java.lang.Integer"/>
                 <entry key="demo_ds_1" value="512" value-type="java.lang.Integer"/>
             </map>
         </property>
     </bean>
 
+    <bean id="dynamicDataSource" class="com.yryz.smart.jdbc.core.dynamic.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry key="SGT" value-ref="shardingDataSource_SGT"></entry>
+                <entry key="QUANHU" value-ref="shardingDataSource_QUANHU"></entry>
+                <entry key="ZGZY" value-ref="shardingDataSource_ZGZY"></entry>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="shardingDataSource_ZGZY">
+        </property>
+    </bean>
+
     <!-- 事务配置 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="shardingDataSource"/>
+        <property name="dataSource" ref="dynamicDataSource"/>
     </bean>
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <!-- ORM配置 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="shardingDataSource"/>
+        <property name="dataSource" ref="dynamicDataSource"/>
         <property name="mapperLocations" value="classpath*:com/yryz/smart/jdbc/**/mapper/*.xml"/>
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
         <property name="plugins">

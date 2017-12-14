@@ -17,6 +17,7 @@
 
 package com.yryz.smart.jdbc.demo;
 
+import com.yryz.smart.jdbc.core.dynamic.DynamicDataSourceHolder;
 import com.yryz.smart.jdbc.demo.service.DemoService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,6 +28,7 @@ public final class SmartDemoMain {
     public static void main(final String[] args) {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-root.xml");
         DemoService demoService = applicationContext.getBean(DemoService.class);
+        DynamicDataSourceHolder.set("1");
         demoService.demo();
     }
 }

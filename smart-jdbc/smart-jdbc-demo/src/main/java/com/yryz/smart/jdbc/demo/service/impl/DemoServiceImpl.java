@@ -29,7 +29,6 @@ public class DemoServiceImpl implements DemoService {
     private OrderItemDao orderItemDao;
 
     public void demo() {
-
         LOG.info("################################################################################");
         LOG.info("1.Create--------------Start");
         orderDao.createIfNotExistsTable();

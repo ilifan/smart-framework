@@ -15,9 +15,9 @@
  * </p>
  */
 
-package com.yryz.smart.jdbc.core.algorithm;
+package com.yryz.smart.jdbc.core.sharding.algorithm;
 
-import com.yryz.smart.jdbc.core.ConsistentHashingMapping;
+import com.yryz.smart.jdbc.core.sharding.ConsistentHashingMapping;
 import io.shardingjdbc.core.api.algorithm.sharding.PreciseShardingValue;
 import io.shardingjdbc.core.api.algorithm.sharding.standard.PreciseShardingAlgorithm;
 
@@ -29,12 +29,12 @@ import java.util.Collection;
  * <p>
  * Created on 2017/12/6 17:50
  * Created by lifan
- * 数据源一致性hash分片算法
+ * 数据表一致性hash分片算法
  */
-public final class DatabaseHashingShardingAlgorithm implements PreciseShardingAlgorithm<String> {
+public final class TableHashingShardingAlgorithm implements PreciseShardingAlgorithm<String> {
 
     @Override
     public String doSharding(final Collection<String> availableTargetNames, final PreciseShardingValue<String> shardingValue) {
-        return ConsistentHashingMapping.getTargetDataSourceName(availableTargetNames, String.valueOf(shardingValue.getValue()));
+        return ConsistentHashingMapping.getTargetTableName(availableTargetNames, String.valueOf(shardingValue.getValue()));
     }
 }
